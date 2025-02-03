@@ -35,6 +35,8 @@ retriever_tool = Tool(
     func=vectorstore.similarity_search,
 )
 
+
+tools = [retriever_tool]
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
 ### Edges
@@ -100,7 +102,7 @@ def agent(state):
     model = ChatOpenAI(
         openai_api_key=os.getenv("OPEN_API_KEY"),
         temperature=0, streaming=True, model="gpt-4-turbo")
-    model = model.bind_tools(tools=[Tool])
+    model = model.bind_tools(tools)
     response = model.invoke(messages)
     # We return a list, because this will get added to the existing list
     return {"messages": [response]}
